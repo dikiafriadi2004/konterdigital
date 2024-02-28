@@ -45,11 +45,11 @@ const items: ISidebarItem[] = [
     items: [
       {
         name: "General",
-        path: "/general",
+        path: "/settings/general",
       },
       {
         name: "Privacy Policy",
-        path: "/privacy-policy",
+        path: "/settings/privacy-policy",
       },
     ],
   },

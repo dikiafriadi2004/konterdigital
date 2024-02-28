@@ -1,52 +1,63 @@
-"use client";
+"use client"
 
-import React, { useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useMemo, useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
 
-import { ChevronDown, LucideIcon } from "lucide-react";
-import SubmenItem from "./submenu-item";
+import { ChevronDown, LucideIcon } from "lucide-react"
+import SubmenuItem from "./submenu-item"
 
 interface ISidebarItem {
-  name: string;
-  icon: LucideIcon;
-  path: string;
-  items?: ISubItem[];
+  name: string
+  icon: LucideIcon
+  path: string
+  items?: ISubItem[]
 }
 
 interface ISubItem {
-  name: string;
-  path: string;
+  name: string
+  path: string
 }
 
 const SidebarItem = ({ item }: { item: ISidebarItem }) => {
-  const { name, icon: Icon, items, path } = item;
-  const [expanded, setExpanded] = useState(false);
+  const { name, icon: Icon, items, path } = item
+  const [expanded, setExpanded] = useState(false)
 
-  const router = useRouter();
-  const pathName = usePathname();
+  const router = useRouter()
+  const pathname = usePathname()
 
   const onClick = () => {
     if (items && items.length > 0) {
-      return setExpanded(!expanded);
+      return setExpanded(!expanded)
     }
-  };
+
+    return router.push(path)
+  }
 
   const isActive = useMemo(() => {
-    return path === pathName;
-  }, [path, pathName]);
+    if (items && items.length > 0) {
+      if (items.find((item) => item.path === pathname)) {
+        setExpanded(true)
+        return true
+      }
+    }
+
+    return path === pathname
+  }, [items, path, pathname])
 
   return (
     <>
       <div
-        className={`flex items-center p-3 rounded-lg hover:bg-sidebar-background cursor-pointer hover:text-sidebar-active justify-between text-sidebar-iconColor ${
-          isActive && "text-sidebar-active bg-sidebar-background"
-        }`}
+        className={`flex items-center p-3 rounded-lg hover:bg-sidebar-background cursor-pointer hover:text-sidebar-active justify-between
+     ${isActive && "text-sidebar-active bg-sidebar-background"}
+    `}
         onClick={onClick}
       >
         <div className="flex items-center space-x-2">
           <Icon size={20} />
-          <p className="text-sm font-semibold">{name}</p>
+          <p className="text-sm font-semibold">{name} </p>
         </div>
+
+        
 
         {items && items.length > 0 && (
           <ChevronDown
@@ -55,15 +66,17 @@ const SidebarItem = ({ item }: { item: ISidebarItem }) => {
           />
         )}
       </div>
+
+
       {expanded && items && items.length > 0 && (
-        <div className="flex flex-col space-x-2 ml-10">
+        <div className="flex flex-col space-y-2 ml-10">
           {items.map((item) => (
-            <SubmenItem key={item.path} item={item} />
+            <SubmenuItem key={item.path} item={item} />
           ))}
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default SidebarItem;
+export default SidebarItem
